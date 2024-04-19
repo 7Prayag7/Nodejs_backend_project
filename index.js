@@ -73,9 +73,13 @@ export { sql };
 // Setting up the session with secret from environment variable
 app.use(
   session({
+    store: sessionStore,
     secret: process.env.SESSION_SECRET, // Set session secret from .env file
     resave: false,
     saveUninitialized: true,
+    cookie: {
+            maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+        },
   })
 );
 

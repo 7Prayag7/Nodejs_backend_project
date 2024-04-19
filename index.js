@@ -29,6 +29,8 @@ const sessionStore = new knexSession({
     clearInterval: 1000 * 60 * 60 * 24, // Clear expired sessions daily
 });
 const app = express();
+// Setting EJS as the view engine
+app.set('view engine', 'ejs');
 
 // app.use(
 //     session({

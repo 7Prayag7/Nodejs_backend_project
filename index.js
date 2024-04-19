@@ -4,7 +4,7 @@ import postgres from "postgres";
 import bodyParser from "body-parser";
 import session from "express-session";
 import passport from "passport";
-import path from 'path'; // Required for specifying the path to the views
+// import path from 'path'; // Required for specifying the path to the views
 
 // import { Strategy } from "passport-local";
 import knex from "knex";
@@ -48,8 +48,8 @@ const app = express();
 // app.set('view engine', 'ejs');
 // const viewsPath = path.join(__dirname, 'views');
 // app.set('views', viewsPath);
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'ejs')
+// app.set('views', path.join(__dirname, 'views'))
+// app.set('view engine', 'ejs')
 // app.use(
 //     session({
 //         store: sessionStore,

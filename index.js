@@ -6,7 +6,7 @@ import session from "express-session";
 import passport from "passport";
 // import { Strategy } from "passport-local";
 import knex from "knex";
-
+import KnexSessionStore from "connect-session-knex";
 // Initialize knex for session store
 const knexInstance = knex({
     client: 'pg',
@@ -19,7 +19,6 @@ const knexInstance = knex({
         ssl: process.env.DB_SSL === "require" ? { rejectUnauthorized: false } : false,
     }
 });
-import KnexSessionStore from "connect-session-knex";
 
 const sessionStore = new KnexSessionStore({
     knex: knexInstance,

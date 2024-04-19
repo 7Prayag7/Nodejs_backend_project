@@ -45,9 +45,11 @@ const sessionStore = new knexSession({
 
 const app = express();
 // Setting EJS as the view engine
-app.set('view engine', 'ejs');
-const viewsPath = path.join(__dirname, 'views');
-app.set('views', viewsPath);
+// app.set('view engine', 'ejs');
+// const viewsPath = path.join(__dirname, 'views');
+// app.set('views', viewsPath);
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'ejs')
 // app.use(
 //     session({
 //         store: sessionStore,

@@ -20,14 +20,24 @@ const knexInstance = knex({
     }
 });
 const knexSession = KnexSessionStore(session);
-const sessionStore = new knexSession({
-// const sessionStore = new KnexSessionStore({
+// const sessionStore = new knexSession({
+// // const sessionStore = new KnexSessionStore({
+//     knex: knexInstance,
+//     tablename: "session",
+//     sidfieldname: "sid",
+//     createtable: false, // Assumes table already exists
+//     clearInterval: 1000 * 60 * 60 * 24, // Clear expired sessions daily
+// });
+const sessionStore = new KnexSessionStore({
     knex: knexInstance,
     tablename: "session",
     sidfieldname: "sid",
-    createtable: false, // Assumes table already exists
+    createtable: false,
     clearInterval: 1000 * 60 * 60 * 24, // Clear expired sessions daily
+    expirationFieldname: "expired", // Specify the correct column name for expiration
+    sessionFieldname: "sess" // Specify the correct column name for session data
 });
+
 const app = express();
 // Setting EJS as the view engine
 app.set('view engine', 'ejs');

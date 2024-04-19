@@ -19,8 +19,9 @@ const knexInstance = knex({
         ssl: process.env.DB_SSL === "require" ? { rejectUnauthorized: false } : false,
     }
 });
-
-const sessionStore = new KnexSessionStore({
+const knexSession = KnexSessionStore(session);
+const sessionStore = new knexSession({
+// const sessionStore = new KnexSessionStore({
     knex: knexInstance,
     tablename: "session",
     sidfieldname: "sid",

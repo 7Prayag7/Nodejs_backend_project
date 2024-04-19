@@ -5,6 +5,8 @@ import bodyParser from "body-parser";
 import session from "express-session";
 import passport from "passport";
 import { fileURLToPath } from 'url';
+import path from 'path';
+
 // import path from 'path'; // Required for specifying the path to the views
 
 // import { Strategy } from "passport-local";

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Detail</title>
+</head>
+<body>
+    <h1>Course Details</h1>
+    <h2><%= course.id %> </h2>
+    <p><strong>Name:</strong> <%= course.name %></p>
+    <p><strong>Category:</strong> <%= course.category %></p>
+    <p><strong>Level:</strong> <%= course.level %></p>
+    <p><strong>Popularity:</strong> <%= course.popularity %></p>
+
+    <!-- Add buttons or forms for CRUD operations here -->
+    <a href="/superadmin/course/edit/<%= locals.course.id %>" role="button">Edit Course</a>
+    <a href="/superadmin/course/delete/<%= locals.course.id %>" role="button">Delete Course</a>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Superadmin Profile</title>
+    <style>
+        h1{
+            text-align: left;
+        }
+        form{
+            text-align: left;
+        }
+        input{
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px 20px;
+        }
+        label
+        {
+          font-size: 20px;
+        }
+        button
+        {
+          padding: 8px 16px;
+          font-size: 15px;
+        }
+        body
+        {
+           display: flex;
+           flex-direction: column;
+        }
+      </style>
+</head>
+<body>
+    <h1>Edit Superadmin Profile</h1>
+    <form action="/superadmin/edit" method="post">
+        <label for="name">Name</label>
+        <input type="text" name="name">
+        <label for="email">Email</label>
+        <input type="email" name="email" required>
+        <label for="password">Password</label>
+        <input type="password" name="password" required>
+      <button type="submit">Edit Profile</button>
+    </form>
+</body>
+</html>

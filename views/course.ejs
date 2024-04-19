@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Courses</title>
+</head>
+<body>
+  <!-- Filter form -->
+<form action="/user/course" method="get">
+  <label for="category">Category:</label>
+  <input type="text" id="category" name="category" value="<%= query.category || '' %>">
+
+  <label for="level">Level:</label>
+  <input type="text" id="level" name="level" value="<%= query.level || '' %>">
+
+  <label for="popularity">Popularity:</label>
+  <input type="text" id="popularity" name="popularity" value="<%= query.popularity || '' %>">
+
+  <button type="submit">Filter</button>
+</form>
+
+        <h1> <% for (let index = 0; index < locals.courses.length; index++) { %>
+            <ul>
+              <li><a href="/user/enroll/<%= courses[index].id %>"><%= courses[index].course_name %></li></a>
+            </ul>
+            <% } %> 
+        </h1>
+<!-- Pagination links -->
+<div>
+  <% if (currentPage > 1) { %>
+      <a href="/user/course?page=<%= currentPage - 1 %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">Previous</a>
+  <% } %>
+  <% for (let i = 1; i <= totalPages; i++) { %>
+      <a href="/user/course?page=<%= i %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">
+          <%= i %>
+      </a>
+  <% } %>
+  <% if (currentPage < totalPages) { %>
+      <a href="/user/course?page=<%= currentPage + 1 %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">Next</a>
+  <% } %>
+</div>
+</body>
+</html>

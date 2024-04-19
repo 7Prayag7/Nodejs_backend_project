@@ -1,0 +1,64 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superadmin Courses</title>
+</head>
+<body>
+    <h1> <% for (let index = 0; index < locals.courses.length; index++) { %>
+        <ul>
+          <li><a href="/superadmin/course/<%= courses[index].id %>"><%= courses[index].name %></li></a>
+        </ul>
+        <% } %> </h1>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Superadmin Courses</title>
+</head>
+<body>
+    <h1>Superadmin Courses</h1>
+
+    <!-- Filter form -->
+<form action="/superadmin/allcourses" method="get">
+  <label for="category">Category:</label>
+  <input type="text" id="category" name="category" value="<%= query.category || '' %>">
+
+  <label for="level">Level:</label>
+  <input type="text" id="level" name="level" value="<%= query.level || '' %>">
+
+  <label for="popularity">Popularity:</label>
+  <input type="text" id="popularity" name="popularity" value="<%= query.popularity || '' %>">
+
+  <button type="submit">Filter</button>
+</form>
+
+
+    <!-- Display courses -->
+    <ul>
+        <% for (let index = 0; index < courses.length; index++) { %>
+            <li><a href="/superadmin/course/<%= courses[index].id %>"><%= courses[index].name %></a></li>
+        <% } %>
+    </ul>
+
+    <!-- Pagination links -->
+    <div>
+        <% if (currentPage > 1) { %>
+            <a href="/superadmin/allcourses?page=<%= currentPage - 1 %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">Previous</a>
+        <% } %>
+        <% for (let i = 1; i <= totalPages; i++) { %>
+            <a href="/superadmin/allcourses?page=<%= i %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">
+                <%= i %>
+            </a>
+        <% } %>
+        <% if (currentPage < totalPages) { %>
+            <a href="/superadmin/allcourses?page=<%= currentPage + 1 %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">Next</a>
+        <% } %>
+    </div>
+</body>
+</html>

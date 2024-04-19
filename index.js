@@ -4,6 +4,7 @@ import postgres from "postgres";
 import bodyParser from "body-parser";
 import session from "express-session";
 import passport from "passport";
+import { fileURLToPath } from 'url';
 // import path from 'path'; // Required for specifying the path to the views
 
 // import { Strategy } from "passport-local";
@@ -50,6 +51,16 @@ const app = express();
 // app.set('views', viewsPath);
 // app.set('views', path.join(__dirname, 'views'))
 // app.set('view engine', 'ejs')
+// Get the current file path using `import.meta.url`
+const __filename = fileURLToPath(import.meta.url);
+// Get the current directory path
+const __dirname = path.dirname(__filename);
+
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
+
+// Specify the path for your views directory
+app.set('views', path.join(__dirname, 'views'));
 // app.use(
 //     session({
 //         store: sessionStore,

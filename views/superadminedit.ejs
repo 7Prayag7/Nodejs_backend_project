@@ -1,37 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Superadmin Profile</title>
     <style>
-        h1{
-            text-align: left;
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
         }
-        form{
-            text-align: left;
+
+        /* Styles for form */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
         }
-        input{
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input {
+            width: 100%;
             display: block;
-            margin-bottom: 10px;
-            padding: 10px 20px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
-        label
-        {
-          font-size: 20px;
+
+        label {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #333;
         }
-        button
-        {
-          padding: 8px 16px;
-          font-size: 15px;
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
         }
-        body
-        {
-           display: flex;
-           flex-direction: column;
+
+        button:hover {
+            background-color: #0056b3;
         }
-      </style>
+    </style>
 </head>
+
 <body>
     <h1>Edit Superadmin Profile</h1>
     <form action="/superadmin/edit" method="post">
@@ -41,7 +72,8 @@
         <input type="email" name="email" required>
         <label for="password">Password</label>
         <input type="password" name="password" required>
-      <button type="submit">Edit Profile</button>
+        <button type="submit">Edit Profile</button>
     </form>
 </body>
+
 </html>

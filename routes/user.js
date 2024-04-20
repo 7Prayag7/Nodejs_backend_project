@@ -543,7 +543,7 @@ router.get("/delete/:id", async (req, res) => {
             await sql`DELETE FROM users WHERE id=${userId}`;
             
             console.log(`Successfully deleted user with ID ${userId}.`);
-            res.redirect('/user');
+            res.redirect('/user/login');
         } catch (error) {
             console.error('Error deleting user:', error);
             res.status(500).send('An error occurred while deleting user.');

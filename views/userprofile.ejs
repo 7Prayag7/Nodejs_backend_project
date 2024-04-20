@@ -1,39 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Archive</title>
-</head>
-<style>
-    a
-    {
-        text-decoration: none;
-        color: blue;
-        border: 2px solid black;
-        padding: 8px 16px;
-    }
-</style>
-<body>
-    <!-- here we will show all the courses in which the loggedIn user is enrolled -->
-    <% if (locals.courses.length>0) { %>
-        <h1>You are registered in the following courses:</h1> 
-            <% for (let index = 0; index < locals.courses.length; index++) { %>
-            <ul>
-              <li><%= courses[index].name %></li>
-            </ul>
-            <% } %> 
-        <% } else if(locals.courses.length===0) { %>
-        <h1>You are not registered in any courses.</h1>
-        <% } %> 
+    <style>
+        /* Style for links */
+        a {
+            text-decoration: none;
+            color: blue;
+            border: 2px solid black;
+            padding: 8px 16px;
+        }
 
-        <h2>Register for a new course:</h2>
-        <a href="/user/course" role="button">Click here</a>
-        <h3>Profile Settings</h3>
-        <!-- add 2 buttons here to logout and to edit profile -->
-        <a href="/user/logout" role="button">Log Out</a>
-        <a href="/user/edit" role="button">Edit Profile</a>
-        <a href="/user/delete/<%= locals.user_id %>" role="button">Delete Profile</a>
-        
+        /* Style for the profile picture and user name */
+        .profile-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Display profile picture and user's name -->
+    <div class="profile-container">
+        <img src="<%= profile_picture_url %>" alt="Profile Picture" class="profile-picture">
+        <h3><%= user_name %></h3>
+    </div>
+
+    <!-- Display courses the user is enrolled in -->
+    <% if (locals.courses.length > 0) { %>
+        <h1>You are registered in the following courses:</h1>
+        <ul>
+            <% for (let index = 0; index < locals.courses.length; index++) { %>
+                <li><%= courses[index].name %></li>
+            <% } %>
+        </ul>
+    <% } else if (locals.courses.length === 0) { %>
+        <h1>You are not registered in any courses.</h1>
+    <% } %>
+
+    <!-- Link to register for a new course -->
+    <h2>Register for a new course:</h2>
+    <a href="/user/course" role="button">Click here</a>
+
+    <!-- Profile settings and actions -->
+    <h3>Profile Settings</h3>
+    <a href="/user/logout" role="button">Log Out</a>
+    <a href="/user/edit" role="button">Edit Profile</a>
+    <a href="/user/delete/<%= locals.user_id %>" role="button">Delete Profile</a>
 </body>
+
 </html>

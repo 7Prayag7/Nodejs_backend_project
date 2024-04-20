@@ -4,41 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Courses</title>
+    <style>
+        /* Style for filter form */
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 200px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 15px;
+        }
+
+        /* Style for course list */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+
+        /* Style for pagination links */
+        .pagination {
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            background-color: #f1f1f1;
+            color: black;
+            border: 1px solid #ddd;
+            margin: 0 4px;
+            border-radius: 5px;
+        }
+
+        .pagination a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+    </style>
 </head>
 <body>
   <!-- Filter form -->
-<form action="/user/course" method="get">
-  <label for="category">Category:</label>
-  <input type="text" id="category" name="category" value="<%= query.category || '' %>">
+  <form action="/user/course" method="get">
+    <label for="category">Category:</label>
+    <input type="text" id="category" name="category" value="<%= query.category || '' %>">
 
-  <label for="level">Level:</label>
-  <input type="text" id="level" name="level" value="<%= query.level || '' %>">
+    <label for="level">Level:</label>
+    <input type="text" id="level" name="level" value="<%= query.level || '' %>">
 
-  <label for="popularity">Popularity:</label>
-  <input type="text" id="popularity" name="popularity" value="<%= query.popularity || '' %>">
+    <label for="popularity">Popularity:</label>
+    <input type="text" id="popularity" name="popularity" value="<%= query.popularity || '' %>">
 
-  <button type="submit">Filter</button>
-</form>
+    <button type="submit">Filter</button>
+  </form>
 
-        <h1> <% for (let index = 0; index < locals.courses.length; index++) { %>
-            <ul>
-              <li><a href="/user/enroll/<%= courses[index].id %>"><%= courses[index].course_name %></li></a>
-            </ul>
-            <% } %> 
-        </h1>
-<!-- Pagination links -->
-<div>
-  <% if (currentPage > 1) { %>
+  <!-- Course list -->
+  <ul>
+    <% for (let index = 0; index < locals.courses.length; index++) { %>
+      <li><a href="/user/enroll/<%= courses[index].id %>"><%= courses[index].course_name %></a></li>
+    <% } %> 
+  </ul>
+
+  <!-- Pagination links -->
+  <div class="pagination">
+    <% if (currentPage > 1) { %>
       <a href="/user/course?page=<%= currentPage - 1 %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">Previous</a>
-  <% } %>
-  <% for (let i = 1; i <= totalPages; i++) { %>
-      <a href="/user/course?page=<%= i %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">
-          <%= i %>
+    <% } %>
+
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <a href="/user/course?page=<%= i %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>" class="<%= currentPage == i ? 'active' : '' %>">
+        <%= i %>
       </a>
-  <% } %>
-  <% if (currentPage < totalPages) { %>
+    <% } %>
+
+    <% if (currentPage < totalPages) { %>
       <a href="/user/course?page=<%= currentPage + 1 %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">Next</a>
-  <% } %>
-</div>
+    <% } %>
+  </div>
 </body>
 </html>

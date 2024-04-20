@@ -1,46 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUPERADMIN login</title>
     <style>
-        h1{
+        /* Styles for form */
+        h1 {
+            text-align: left;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form {
             text-align: left;
         }
-        form{
-            text-align: left;
-        }
-        input{
+
+        input[type="email"],
+        input[type="password"] {
             display: block;
             margin-bottom: 10px;
             padding: 10px 20px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
         }
-        label
-        {
-          font-size: 20px;
+
+        label {
+            font-size: 20px;
+            margin-bottom: 5px;
+            display: block;
         }
-        button
-        {
-          padding: 8px 16px;
-          font-size: 15px;
+
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
-        body
-        {
-           display: flex;
-           flex-direction: column;
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
         }
     </style>
 </head>
-<body>
-  <h1>SUPERADMIN Please Log-In </h1>
 
+<body>
+    <h1>SUPERADMIN Please Log-In </h1>
     <form action="/superadmin/login" method="POST">
-          <label for="email">Email is the username here</label>
-          <input type="email" name="username"> <br>
-          <label for="password">Password</label>
-          <input type="password"  name="password"> <br>
-        <button type="submit" >Login</button>
-      </form>
+        <label for="email">Email is the username here</label>
+        <input type="email" name="username">
+
+        <label for="password">Password</label>
+        <input type="password" name="password">
+
+        <button type="submit">Login</button>
+    </form>
 </body>
+
 </html>

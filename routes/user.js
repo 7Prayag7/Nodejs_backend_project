@@ -34,54 +34,128 @@ router.get("/register", (req, res) => {
     res.render("register.ejs");
 });
 
-// POST handler for user registration
-router.post("/register", async (req, res) => {
+// POST handler for user registration with image upload
+router.post('/register', upload.single('profile_picture'), async (req, res) => {
     const { name, email, password } = req.body;
-    
+
     try {
         // Check if a user with the given email already exists
         const existingUser = await sql`SELECT * FROM users WHERE email = ${email}`;
-        
-        // If no user found, proceed with registration
-        if (existingUser.length === 0) {
-            // Hash the user's password before saving it to the database
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
-            
-            // Save the new user to the database
-            const newUser = await sql`INSERT INTO users (name, email, password) VALUES (${name}, ${email}, ${hashedPassword}) RETURNING *`;
-            const user = newUser[0];
-            
-            // Send a welcome email to the user
-            try {
-                await resend.emails.send({
-                    from: 'Acme <onboarding@resend.dev>',
-                    to: [`${email}`],
-                    subject: 'Hello World',
-                    html: '<strong>It works!</strong>',
-                });
-                console.log('Welcome email sent successfully.');
-            } catch (emailError) {
-                console.error('Error sending welcome email:', emailError);
-            }
-            
-            // Log the user in and redirect to their profile
-            req.login(user, (err) => {
-                if (err) {
-                    console.error('Error logging in user:', err);
-                    res.status(500).send('An error occurred while logging in.');
-                    return;
-                }
-                res.redirect("/user/profile");
-            });
-        } else {
-            // If user already exists, redirect to the registration page
-            res.redirect("/user/register");
+
+        if (existingUser.length > 0) {
+            // If the user already exists, redirect to the registration page
+            return res.redirect('/user/register');
         }
+
+        // Hash the user's password before saving it to the database
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+        // Default profile picture URL
+        let profilePictureUrl = 'https://example.com/default-profile-picture.jpg';
+
+        // Check if a file is uploaded
+        if (req.file) {
+            // Upload the image to Cloudinary
+            try {
+                const uploadResult = await new Promise((resolve, reject) => {
+                    const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                    uploadStream.end(req.file.buffer);
+                });
+
+                // If upload is successful, set the profile picture URL
+                profilePictureUrl = uploadResult.secure_url;
+            } catch (error) {
+                console.error('Error uploading profile picture:', error);
+                // Continue with the default profile picture URL in case of an error
+            }
+        }
+
+        // Save the new user to the database with profile picture URL
+        const newUser = await sql`INSERT INTO users (name, email, password, profile_picture_url)
+                                  VALUES (${name}, ${email}, ${hashedPassword}, ${profilePictureUrl}) RETURNING *`;
+
+        const user = newUser[0];
+
+        // Send a welcome email to the user
+        try {
+            await resend.emails.send({
+                from: 'Acme <onboarding@resend.dev>',
+                to: [`${email}`],
+                subject: 'Welcome to Our Platform',
+                html: '<strong>Welcome! It works!</strong>',
+            });
+            console.log('Welcome email sent successfully.');
+        } catch (emailError) {
+            console.error('Error sending welcome email:', emailError);
+        }
+
+        // Log the user in and redirect to their profile
+        req.login(user, (err) => {
+            if (err) {
+                console.error('Error logging in user:', err);
+                return res.status(500).send('An error occurred while logging in.');
+            }
+            return res.redirect('/user/profile');
+        });
     } catch (err) {
         console.error('Error during user registration:', err);
         res.status(500).send('An error occurred during registration.');
     }
 });
+// // POST handler for user registration
+// router.post("/register", async (req, res) => {
+//     const { name, email, password } = req.body;
+    
+//     try {
+//         // Check if a user with the given email already exists
+//         const existingUser = await sql`SELECT * FROM users WHERE email = ${email}`;
+        
+//         // If no user found, proceed with registration
+//         if (existingUser.length === 0) {
+//             // Hash the user's password before saving it to the database
+//             const hashedPassword = await bcrypt.hash(password, saltRounds);
+            
+//             // Save the new user to the database
+//             const newUser = await sql`INSERT INTO users (name, email, password) VALUES (${name}, ${email}, ${hashedPassword}) RETURNING *`;
+//             const user = newUser[0];
+            
+//             // Send a welcome email to the user
+//             try {
+//                 await resend.emails.send({
+//                     from: 'Acme <onboarding@resend.dev>',
+//                     to: [`${email}`],
+//                     subject: 'Hello World',
+//                     html: '<strong>It works!</strong>',
+//                 });
+//                 console.log('Welcome email sent successfully.');
+//             } catch (emailError) {
+//                 console.error('Error sending welcome email:', emailError);
+//             }
+            
+//             // Log the user in and redirect to their profile
+//             req.login(user, (err) => {
+//                 if (err) {
+//                     console.error('Error logging in user:', err);
+//                     res.status(500).send('An error occurred while logging in.');
+//                     return;
+//                 }
+//                 res.redirect("/user/profile");
+//             });
+//         } else {
+//             // If user already exists, redirect to the registration page
+//             res.redirect("/user/register");
+//         }
+//     } catch (err) {
+//         console.error('Error during user registration:', err);
+//         res.status(500).send('An error occurred during registration.');
+//     }
+// });
 
 // Route for user login page
 router.get("/login", (req, res) => {
@@ -100,6 +174,7 @@ router.post("/login",
 router.get("/profile", async (req, res) => {
     if (req.isAuthenticated()) {
         try {
+            // Fetch the user's enrolled courses
             const courses = await sql`
                 SELECT c.name
                 FROM course_2 c
@@ -107,11 +182,24 @@ router.get("/profile", async (req, res) => {
                 INNER JOIN users u ON e.user_id = u.id
                 WHERE u.id = ${req.user.id};
             `;
-            
-            // Render the user's profile page with their enrolled courses
+
+            // Fetch the user's profile picture URL and name
+            const userProfile = await sql`
+                SELECT name, profile_picture_url
+                FROM users
+                WHERE id = ${req.user.id};
+            `;
+
+            // Get the user's name and profile picture URL from the query result
+            const userName = userProfile.length > 0 ? userProfile[0].name : null;
+            const profilePictureUrl = userProfile.length > 0 ? userProfile[0].profile_picture_url : null;
+
+            // Render the user's profile page with their enrolled courses, profile picture, and name
             res.render("userprofile.ejs", {
-                courses: courses,
+                courses,
                 user_id: req.user.id,
+                profile_picture_url: profilePictureUrl,
+                user_name: userName // Pass the user's name to the template
             });
         } catch (error) {
             console.error('Error fetching user profile:', error);
@@ -122,6 +210,31 @@ router.get("/profile", async (req, res) => {
         console.log("Not authenticated.");
     }
 });
+// router.get("/profile", async (req, res) => {
+//     if (req.isAuthenticated()) {
+//         try {
+//             const courses = await sql`
+//                 SELECT c.name
+//                 FROM course_2 c
+//                 INNER JOIN enrollment_2 e ON c.id = e.course_id
+//                 INNER JOIN users u ON e.user_id = u.id
+//                 WHERE u.id = ${req.user.id};
+//             `;
+            
+//             // Render the user's profile page with their enrolled courses
+//             res.render("userprofile.ejs", {
+//                 courses: courses,
+//                 user_id: req.user.id,
+//             });
+//         } catch (error) {
+//             console.error('Error fetching user profile:', error);
+//             res.status(500).send('An error occurred while fetching user profile.');
+//         }
+//     } else {
+//         res.redirect("/user");
+//         console.log("Not authenticated.");
+//     }
+// });
 
 // Route for displaying courses the user is not enrolled in
 router.get("/course", async (req, res) => {
@@ -267,17 +380,37 @@ router.get("/logout", (req, res) => {
     });
 });
 
+
 // Route for user profile editing page
-router.get("/edit", (req, res) => {
+router.get('/edit', async (req, res) => {
     if (!req.isAuthenticated()) {
-        res.redirect("/user/login");
-    } else {
-        res.render("useredit.ejs");
+        return res.redirect('/user/login');
+    }
+
+    try {
+        const userId = req.user.id;
+        const userData = await sql`SELECT * FROM users WHERE id=${userId}`;
+
+        if (!userData || userData.length === 0) {
+            return res.status(404).send('User not found.');
+        }
+
+        const user = userData[0];
+
+        // Pass user data (including user_name) to the EJS template
+        res.render('useredit.ejs', {
+            user_name: user.name,
+            user_email: user.email,
+            user_profile_picture: user.profile_picture_url
+        });
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).send('An error occurred while fetching user data.');
     }
 });
 
 // POST handler for editing user profile
-router.post("/edit", async (req, res) => {
+router.post("/edit", upload.single('profile_picture'), async (req, res) => {
     if (!req.isAuthenticated()) {
         res.redirect("/user/login");
         return;
@@ -286,34 +419,54 @@ router.post("/edit", async (req, res) => {
     try {
         const userId = req.user.id;
         const existingUserData = await sql`SELECT * FROM users WHERE id=${userId}`;
+        const userData = existingUserData[0];
+        const name = req.body.name || userData.name;
+        const email = req.body.email || userData.email;
+        const password = req.body.password || '';
 
-        if (!existingUserData || existingUserData.length === 0) {
-            console.error(`User with ID ${userId} not found.`);
-            res.status(404).send("User not found.");
-            return;
+        // Check for missing or undefined values and handle them appropriately
+        if (name === undefined || email === undefined) {
+            throw new Error("Name or email is undefined");
         }
 
-        const userData = existingUserData[0];
-        const { name, email, password } = req.body;
-
-        // Update the user data
-        const updatedUser = {
-            name: name || userData.name,
-            email: email || userData.email,
-            password: password || userData.password,
-        };
-
-        // Hash the new password if it was provided
         let hashedPassword = userData.password;
         if (password) {
             hashedPassword = await bcrypt.hash(password, saltRounds);
         }
 
-        // Update the user in the database
-        await sql`UPDATE users
-                  SET name = ${updatedUser.name}, email = ${updatedUser.email}, password = ${hashedPassword}
-                  WHERE id = ${userId}`;
+        // Handle the profile picture file upload
+        let profilePicture = userData.profile_picture;
+        if (req.file) {
+            // Upload the new profile picture to Cloudinary
+            try {
+                const uploadResult = await new Promise((resolve, reject) => {
+                    const uploadStream = cloudinary.uploader.upload_stream((error, result) => {
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                    uploadStream.end(req.file.buffer);
+                });
+
+                // If upload is successful, set the new profile picture URL
+                profilePicture = uploadResult.secure_url;
+            } catch (error) {
+                console.error('Error uploading profile picture:', error);
+                // Continue with the existing profile picture URL in case of an error
+            }
+        }
+        console.log(name)
+        console.log(email)
+        console.log(hashedPassword)
+        console.log(profilePicture)
         
+        // Update the user data in the database
+        await sql`UPDATE users
+                  SET name = ${name}, email = ${email}, password = ${hashedPassword}, profile_picture_url = ${profilePicture}
+                  WHERE id = ${userId}`;
+
         console.log(`Successfully updated user profile for user ID ${userId}.`);
         res.redirect("/user/profile");
     } catch (error) {
@@ -321,6 +474,59 @@ router.post("/edit", async (req, res) => {
         res.status(500).send('An error occurred while updating user profile.');
     }
 });
+// router.get("/edit", (req, res) => {
+//     if (!req.isAuthenticated()) {
+//         res.redirect("/user/login");
+//     } else {
+//         res.render("useredit.ejs");
+//     }
+// });
+
+// POST handler for editing user profile
+// router.post("/edit", async (req, res) => {
+//     if (!req.isAuthenticated()) {
+//         res.redirect("/user/login");
+//         return;
+//     }
+
+//     try {
+//         const userId = req.user.id;
+//         const existingUserData = await sql`SELECT * FROM users WHERE id=${userId}`;
+
+//         if (!existingUserData || existingUserData.length === 0) {
+//             console.error(`User with ID ${userId} not found.`);
+//             res.status(404).send("User not found.");
+//             return;
+//         }
+
+//         const userData = existingUserData[0];
+//         const { name, email, password } = req.body;
+
+//         // Update the user data
+//         const updatedUser = {
+//             name: name || userData.name,
+//             email: email || userData.email,
+//             password: password || userData.password,
+//         };
+
+//         // Hash the new password if it was provided
+//         let hashedPassword = userData.password;
+//         if (password) {
+//             hashedPassword = await bcrypt.hash(password, saltRounds);
+//         }
+
+//         // Update the user in the database
+//         await sql`UPDATE users
+//                   SET name = ${updatedUser.name}, email = ${updatedUser.email}, password = ${hashedPassword}
+//                   WHERE id = ${userId}`;
+        
+//         console.log(`Successfully updated user profile for user ID ${userId}.`);
+//         res.redirect("/user/profile");
+//     } catch (error) {
+//         console.error('Error updating user profile:', error);
+//         res.status(500).send('An error occurred while updating user profile.');
+//     }
+// });
 
 // Route for deleting a user
 router.get("/delete/:id", async (req, res) => {

@@ -1,49 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>new Course</title>
+    <title>New Course</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styles */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+
+        /* Form Styles */
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        form input {
+            width: calc(100% - 10px);
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        form button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
-<style>
-  h1{
-      text-align: left;
-  }
-  form{
-      text-align: left;
-  }
-  input{
-      display: block;
-      margin-bottom: 10px;
-      padding: 10px 20px;
-  }
-  label
-  {
-    font-size: 20px;
-  }
-  button
-  {
-    padding: 8px 16px;
-    font-size: 15px;
-  }
-  body
-  {
-     display: flex;
-     flex-direction: column;
-  }
-</style>
+
 <body>
-  <h1>Add new Course </h1>
-    <form action="/superadmin/course/create" method="POST">
-          <label for="name">Name</label>
-          <input type="text" name="name">
-          <label for="level">level</label>
-          <input type="text" name="level">
-          <label for="category">category</label>
-          <input type="text" name="category">
-          <label for="popularity">popularity</label>
-          <input type="text" name="popularity">
-        <button type="submit">Create</button>
-      </form>
+    <div class="container">
+        <h1>Add New Course</h1>
+        <form action="/superadmin/course/create" method="POST">
+            <label for="name">Name</label>
+            <input type="text" name="name">
+
+            <label for="level">Level</label>
+            <input type="text" name="level">
+
+            <label for="category">Category</label>
+            <input type="text" name="category">
+
+            <label for="popularity">Popularity</label>
+            <input type="text" name="popularity">
+
+            <button type="submit">Create</button>
+        </form>
+    </div>
 </body>
+
 </html>

@@ -1,47 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
     <style>
-        h1{
+        /* Styles for form */
+        h1 {
             text-align: left;
         }
-        form{
+
+        form {
             text-align: left;
         }
-        input{
+
+        input {
             display: block;
             margin-bottom: 10px;
             padding: 10px 20px;
         }
-        label
-        {
-          font-size: 20px;
+
+        label {
+            font-size: 20px;
         }
-        button
-        {
-          padding: 8px 16px;
-          font-size: 15px;
+
+        button {
+            padding: 8px 16px;
+            font-size: 15px;
         }
-        body
-        {
-           display: flex;
-           flex-direction: column;
+
+        body {
+            display: flex;
+            flex-direction: column;
         }
-      </style>
+    </style>
 </head>
+
 <body>
     <h1>Edit Profile</h1>
-    <form action="/user/edit" method="post">
+    <form action="/user/edit" method="post" enctype="multipart/form-data">
         <label for="name">Name</label>
-        <input type="text" name="name">
+        <input type="text" name="name" value="<%= user_name %>">
+
         <label for="email">Email</label>
-        <input type="email" name="email" required>
+        <input type="email" name="email" value="<%= user_email %>" required>
+
         <label for="password">Password</label>
-        <input type="password" name="password" required>
-      <button type="submit">Edit Profile</button>
+        <input type="password" name="password">
+
+        <label for="profile_picture">Profile Picture</label>
+        <input type="file" name="profile_picture" accept="image/*">
+
+        <button type="submit">Edit Profile</button>
     </form>
 </body>
+
 </html>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,16 +9,28 @@
         /* Style for links */
         a {
             text-decoration: none;
-            color: blue;
-            border: 2px solid black;
-            padding: 8px 16px;
+            color: #4CAF50;
+            background-color: #f1f1f1;
+            padding: 10px 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
         }
 
-        /* Style for the profile picture and user name */
+        a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Style for the profile container */
         .profile-container {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 8px;
         }
 
         .profile-picture {
@@ -27,7 +38,48 @@
             width: 100px;
             height: 100px;
             object-fit: cover;
-            margin-right: 10px;
+            margin-right: 20px;
+            border: 2px solid #4CAF50;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        /* Style for courses list */
+        .courses-container {
+            margin-bottom: 30px;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .courses-container h1,
+        .courses-container h2 {
+            margin: 0;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .courses-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .courses-container ul li {
+            margin-bottom: 5px;
+        }
+
+        /* Style for profile settings and actions */
+        .profile-actions {
+            margin-top: 30px;
+        }
+
+        .profile-actions h3 {
+            margin: 0;
+            color: #333;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -36,30 +88,36 @@
     <!-- Display profile picture and user's name -->
     <div class="profile-container">
         <img src="<%= profile_picture_url %>" alt="Profile Picture" class="profile-picture">
-        <h3><%= user_name %></h3>
+        <div class="profile-info">
+            <h3><%= user_name %></h3>
+        </div>
     </div>
 
     <!-- Display courses the user is enrolled in -->
-    <% if (locals.courses.length > 0) { %>
-        <h1>You are registered in the following courses:</h1>
-        <ul>
-            <% for (let index = 0; index < locals.courses.length; index++) { %>
-                <li><%= courses[index].name %></li>
-            <% } %>
-        </ul>
-    <% } else if (locals.courses.length === 0) { %>
-        <h1>You are not registered in any courses.</h1>
-    <% } %>
+    <div class="courses-container">
+        <% if (locals.courses.length > 0) { %>
+            <h1>You are registered in the following courses:</h1>
+            <ul>
+                <% for (let index = 0; index < locals.courses.length; index++) { %>
+                    <li><%= courses[index].name %></li>
+                <% } %>
+            </ul>
+        <% } else if (locals.courses.length === 0) { %>
+            <h2>You are not registered in any courses.</h2>
+        <% } %>
+    </div>
 
     <!-- Link to register for a new course -->
     <h2>Register for a new course:</h2>
     <a href="/user/course" role="button">Click here</a>
 
     <!-- Profile settings and actions -->
-    <h3>Profile Settings</h3>
-    <a href="/user/logout" role="button">Log Out</a>
-    <a href="/user/edit" role="button">Edit Profile</a>
-    <a href="/user/delete/<%= locals.user_id %>" role="button">Delete Profile</a>
+    <div class="profile-actions">
+        <h3>Profile Settings</h3>
+        <a href="/user/logout" role="button">Log Out</a>
+        <a href="/user/edit" role="button">Edit Profile</a>
+        <a href="/user/delete/<%= locals.user_id %>" role="button">Delete Profile</a>
+    </div>
 </body>
-
 </html>
+

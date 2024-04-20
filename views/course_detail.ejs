@@ -1,20 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Detail</title>
-</head>
-<body>
-    <h1>Course Details</h1>
-    <h2><%= course.id %> </h2>
-    <p><strong>Name:</strong> <%= course.name %></p>
-    <p><strong>Category:</strong> <%= course.category %></p>
-    <p><strong>Level:</strong> <%= course.level %></p>
-    <p><strong>Popularity:</strong> <%= course.popularity %></p>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
 
-    <!-- Add buttons or forms for CRUD operations here -->
-    <a href="/superadmin/course/edit/<%= locals.course.id %>" role="button">Edit Course</a>
-    <a href="/superadmin/course/delete/<%= locals.course.id %>" role="button">Delete Course</a>
+        /* Container Styles */
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styles */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+
+        /* Detail Styles */
+        .course-detail {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .course-detail p {
+            margin: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .course-detail strong {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Button Styles */
+        .button-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .button-container a {
+            margin: 0 10px;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Course Details</h1>
+        <div class="course-detail">
+            <p><strong>ID:</strong> <%= course.id %></p>
+            <p><strong>Name:</strong> <%= course.name %></p>
+            <p><strong>Category:</strong> <%= course.category %></p>
+            <p><strong>Level:</strong> <%= course.level %></p>
+            <p><strong>Popularity:</strong> <%= course.popularity %></p>
+        </div>
+        <div class="button-container">
+            <a href="/superadmin/course/edit/<%= locals.course.id %>" role="button">Edit Course</a>
+            <a href="/superadmin/course/delete/<%= locals.course.id %>" role="button">Delete Course</a>
+        </div>
+    </div>
 </body>
+
 </html>

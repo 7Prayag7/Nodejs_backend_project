@@ -5,41 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login User</title>
     <style>
-        h1{
-            text-align: left;
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        form{
-            text-align: left;
+
+        form {
+            width: 350px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
         }
-        input{
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
             display: block;
-            margin-bottom: 10px;
-            padding: 10px 20px;
+            color: #555;
         }
-        label
-        {
-          font-size: 20px;
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
         }
-        button
-        {
-          padding: 8px 16px;
-          font-size: 15px;
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            background-color: #4caf50;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        body
-        {
-           display: flex;
-           flex-direction: column;
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-  <h1>Please Log-In </h1>
     <form action="/user/login" method="POST">
-          <label for="email">Email is the username here</label>
-          <input type="email" name="username"> <br>
-          <label for="password">Password</label>
-          <input type="password"  name="password"> <br>
-        <button type="submit" >Login</button>
-      </form>
+        <h1>Login</h1>
+        <div class="form-group">
+            <label for="email">Email (Username)</label>
+            <input type="email" id="email" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+        <p class="text-center">Don't have an account? <a class="link" href="/user/register">Register</a></p>
+    </form>
 </body>
 </html>

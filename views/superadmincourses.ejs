@@ -1,64 +1,162 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Superadmin Courses</title>
-</head>
-<body>
-    <h1> <% for (let index = 0; index < locals.courses.length; index++) { %>
-        <ul>
-          <li><a href="/superadmin/course/<%= courses[index].id %>"><%= courses[index].name %></li></a>
-        </ul>
-        <% } %> </h1>
-</body>
-</html> -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Superadmin Courses</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #007bff;
+        }
+
+        /* Form Styles */
+        form {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        form input {
+            width: calc(100% - 10px);
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        form button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Course List Styles */
+        .course-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .course-list ul li {
+            margin-bottom: 10px;
+        }
+
+        .course-list ul li a {
+            text-decoration: none;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        .course-list ul li a:hover {
+            text-decoration: underline;
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            margin: 0 4px;
+        }
+
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Superadmin Courses</h1>
+    <div class="container">
+        <h1>Superadmin Courses</h1>
 
-    <!-- Filter form -->
-<form action="/superadmin/allcourses" method="get">
-  <label for="category">Category:</label>
-  <input type="text" id="category" name="category" value="<%= query.category || '' %>">
+        <!-- Filter form -->
+        <form action="/superadmin/allcourses" method="get">
+            <label for="category">Category:</label>
+            <input type="text" id="category" name="category" value="<%= query.category || '' %>">
 
-  <label for="level">Level:</label>
-  <input type="text" id="level" name="level" value="<%= query.level || '' %>">
+            <label for="level">Level:</label>
+            <input type="text" id="level" name="level" value="<%= query.level || '' %>">
 
-  <label for="popularity">Popularity:</label>
-  <input type="text" id="popularity" name="popularity" value="<%= query.popularity || '' %>">
+            <label for="popularity">Popularity:</label>
+            <input type="text" id="popularity" name="popularity" value="<%= query.popularity || '' %>">
 
-  <button type="submit">Filter</button>
-</form>
+            <button type="submit">Filter</button>
+        </form>
 
+        <!-- Display courses -->
+        <div class="course-list">
+            <ul>
+                <% for (let index = 0; index < courses.length; index++) { %>
+                <li><a href="/superadmin/course/<%= courses[index].id %>"><%= courses[index].name %></a></li>
+                <% } %>
+            </ul>
+        </div>
 
-    <!-- Display courses -->
-    <ul>
-        <% for (let index = 0; index < courses.length; index++) { %>
-            <li><a href="/superadmin/course/<%= courses[index].id %>"><%= courses[index].name %></a></li>
-        <% } %>
-    </ul>
-
-    <!-- Pagination links -->
-    <div>
-        <% if (currentPage > 1) { %>
+        <!-- Pagination links -->
+        <div class="pagination">
+            <% if (currentPage > 1) { %>
             <a href="/superadmin/allcourses?page=<%= currentPage - 1 %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">Previous</a>
-        <% } %>
-        <% for (let i = 1; i <= totalPages; i++) { %>
-            <a href="/superadmin/allcourses?page=<%= i %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">
-                <%= i %>
-            </a>
-        <% } %>
-        <% if (currentPage < totalPages) { %>
+            <% } %>
+            <% for (let i = 1; i <= totalPages; i++) { %>
+            <a href="/superadmin/allcourses?page=<%= i %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>"<%= i === currentPage ? 'class="active"' : '' %>><%= i %></a>
+            <% } %>
+            <% if (currentPage < totalPages) { %>
             <a href="/superadmin/allcourses?page=<%= currentPage + 1 %>&limit=<%= limit %>&category=<%= query.category || '' %>&level=<%= query.level || '' %>&popularity=<%= query.popularity || '' %>">Next</a>
-        <% } %>
+            <% } %>
+        </div>
     </div>
 </body>
+
 </html>
+
